@@ -1,6 +1,6 @@
 # dwz-python
 
-This repo demostrate how to use [API](https://dwz.cn/console/apidoc/v3) for DWZ in Python.
+This repo demonstrate how to use [API](https://dwz.cn/console/apidoc/v3) for DWZ in Python.
 
 [Token](https://console.bce.baidu.com/dwz/#/dwz/token) is required.
 it's not suggest to implement API in your front-end code, which may lead to leaking token.
