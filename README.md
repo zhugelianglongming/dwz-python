@@ -22,14 +22,17 @@ result = dwz.query("shortPath")
 result = dwz.delete("shortPath")
 ```
 ## Custom domain user
+You can apply a custom domain by submitting a [ticket](https://ticket.bce.baidu.com/#/ticket/create~productId=188&questionId=706&channel=2),
+BTW not free~
 ```python
 from dwz import Dwz
 
+# a custom domain as 'custom.dwz.cn'
 dwz = Dwz("token", "custom.dwz.cn")
 
-# create short URL (custom.dwz.cn) for 2 long URLs with 1 year validity
+# create long-term short URL (custom.dwz.cn) for 2 long URLs
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
-result = dwz.create(long_urls, "1-year")
+result = dwz.create(long_urls, "long-term")
 
 # query origin long URL for 'https://custom.dwz.cn/shortPath'
 result = dwz.query("shortPath")
