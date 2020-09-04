@@ -1,41 +1,42 @@
 # dwz-python
 
-本代码库演示了通过 Python 调用百度短网址 [API](https://dwz.cn/console/apidoc/v3) 的方法。
+This repo demonstrate how to use [API](https://dwz.cn/console/apidoc/v3) for DWZ in Python.
 
-[Token](https://console.bce.baidu.com/dwz/#/dwz/token) 是必须的鉴权参数。
-不建议在前端代码中实现 API，以免 Token 信息泄露导致经济损失。
+[Token](https://console.bce.baidu.com/dwz/#/dwz/token) is required.
+it's not suggest to implement API in your front-end code, which may lead to leaking token.
 
-## 常规用法
+## Normal user
 ```python
 from dwz import Dwz
 
 dwz = Dwz("token")
 
-# 为 2 条长网址链接创建 1 年有效的短网址 
+# create short URL (dwz.cn) for 2 long URLs with 1 year validity
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "1-year")
 
-# 查询 'https://dwz.cn/shortPath' 对应的长网址链接
+# query origin long URL for 'https://dwz.cn/shortPath'
 result = dwz.query("shortPath")
 
-# 删除短网址：'https://dwz.cn/shortPath'
+# delete 'https://dwz.cn/shortPath'
 result = dwz.delete("shortPath")
 ```
-## 定制域名用法
-定制域名目前可通过 [工单](https://ticket.bce.baidu.com/#/ticket/create~productId=188&questionId=706&channel=2) 申请购买
+## Custom domain user
+You can apply a custom domain by submitting a [ticket](https://ticket.bce.baidu.com/#/ticket/create~productId=188&questionId=706&channel=2),
+BTW not free~
 ```python
 from dwz import Dwz
 
-# 假设定制域名为 'custom.dwz.cn'
+# a custom domain as 'custom.dwz.cn'
 dwz = Dwz("token", "custom.dwz.cn")
 
-# 为 2 条长网址链接创建长期有效的短网址 
+# create long-term short URL (custom.dwz.cn) for 2 long URLs
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "long-term")
 
-# 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接
+# query origin long URL for 'https://custom.dwz.cn/shortPath'
 result = dwz.query("shortPath")
 
-# 删除短网址 'https://custom.dwz.cn/shortPath'
+# delete 'https://custom.dwz.cn/shortPath'
 result = dwz.delete("shortPath")
 ```
