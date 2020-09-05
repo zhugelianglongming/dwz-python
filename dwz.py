@@ -2,14 +2,17 @@
 # -*- coding: UTF-8 -*-
 # API: https://dwz.cn/console/apidoc/v3
 
-import requests
 import json
+import re
+import requests
+from urllib import parse
 
 
 class Dwz:
     """
     python code use DWZ API
     """
+    schema = "https"
     api_path = "/api/v3/short-urls"
 
     def __init__(self, token, short_domain="dwz.cn"):
@@ -19,7 +22,10 @@ class Dwz:
             default: dwz.cn
             custom: *.dwz.cn
         """
-        self.header = {"Dwz-Token": token}
+        self.header = {
+            "Dwz-Token": token,
+            "Content-Language": "zh"
+            }
         self.short_domain = short_domain
 
     def create(self, long_urls, tov):
@@ -59,10 +65,10 @@ class Dwz:
         resp = requests.post(url, headers=self.header, data=json.dumps(data))
         return json.loads(resp.text)
 
-    def query(self, short_path):
+    def query(self, short_url):
         """
-        query origin long URL by short URL path
-        :param short_path: path in short URL
+        query origin long URL for short URL
+        :param short_url:
         :return: json with format:
         {
             "Code": 0,
@@ -70,20 +76,37 @@ class Dwz:
             "ErrMsg": ""
         }
         """
-        url = "https://{}{}/{}".format(self.short_domain, Dwz.api_path, short_path)
+        domain, short_path = parse_short_url(short_url)
+        url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path+"/"+short_path, None, None))
         resp = requests.get(url, headers=self.header)
         return json.loads(resp.text)
 
-    def delete(self, short_path):
+    def delete(self, short_url):
         """
         delete short URL
-        :param short_path: path in short URL
+        :param short_url:
         :return: json with format:
         {
             "Code": 0,
             "ErrMsg": ""
         }
         """
-        url = "https://{}{}/{}".format(self.short_domain, Dwz.api_path, short_path)
+        domain, short_path = parse_short_url(short_url)
+        url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path+"/"+short_path, None, None))
         resp = requests.delete(url, headers=self.header)
         return json.loads(resp.text)
+
+
+def parse_short_url(short_url):
+    """
+    parse domain and path for short URL
+    :param short_url:
+    :return: domain, path
+    :exception: ValueError
+    """
+    result = parse.urlsplit(short_url)
+    if not result.netloc.endswith("dwz.cn"):
+        raise ValueError("invalid short domain: {}".format(result.netloc))
+    if not re.match(r"^\w+$", result.path.lstrip("/")):
+        raise ValueError("invalid short path: {}".format(result.path))
+    return result.netloc, result.path.lstrip("/")

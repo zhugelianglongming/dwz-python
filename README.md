@@ -16,10 +16,10 @@ long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "1-year")
 
 # 查询 'https://dwz.cn/shortPath' 对应的长网址链接
-result = dwz.query("shortPath")
+result = dwz.query("https://dwz.cn/shortPath")
 
 # 删除短网址：'https://dwz.cn/shortPath'
-result = dwz.delete("shortPath")
+result = dwz.delete("https://dwz.cn/shortPath")
 ```
 ## 定制域名用法
 定制域名目前可通过 [工单](https://ticket.bce.baidu.com/#/ticket/create~productId=188&questionId=706&channel=2) 申请购买
@@ -34,8 +34,8 @@ long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "long-term")
 
 # 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接
-result = dwz.query("shortPath")
+result = dwz.query("https://custom.dwz.cn/shortPath")
 
 # 删除短网址 'https://custom.dwz.cn/shortPath'
-result = dwz.delete("shortPath")
+result = dwz.delete("https://custom.dwz.cn/shortPath")
 ```
