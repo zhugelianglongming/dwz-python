@@ -2,8 +2,7 @@
 
 本代码库演示了通过 Python 调用百度短网址 [API](https://dwz.cn/console/apidoc/v3) 的方法。
 
-[Token](https://console.bce.baidu.com/dwz/#/dwz/token) 是必须的鉴权参数。
-不建议在前端代码中实现 API，以免 Token 信息泄露导致经济损失。
+* [Token](https://console.bce.baidu.com/dwz/#/dwz/token) 是必须的鉴权参数。
 
 ## 常规用法
 ```python
@@ -11,9 +10,11 @@ from dwz import Dwz
 
 dwz = Dwz("token")
 
-# 为 2 条长网址链接创建 1 年有效的短网址 
+# 为 2 条长网址链接创建 1 年有效的短网址 (dwz.cn/xxx)
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "1-year")
+# 为 1 条长网址链接创建长期有效的短网址 (dwz.cn/xxx)
+result = dwz.create_single("https://www.baidu.com/3", "long-term")
 
 # 查询 'https://dwz.cn/shortPath' 对应的长网址链接
 result = dwz.query("https://dwz.cn/shortPath")
@@ -29,9 +30,11 @@ from dwz import Dwz
 # 假设定制域名为 'custom.dwz.cn'
 dwz = Dwz("token", "custom.dwz.cn")
 
-# 为 2 条长网址链接创建长期有效的短网址 
+# 为 2 条长网址链接创建 1 年有效的短网址 (custom.dwz.cn/xxx)
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
-result = dwz.create(long_urls, "long-term")
+result = dwz.create(long_urls, "1-year")
+# 为 1 条长网址链接创建长期有效的短网址 (custom.dwz.cn/xxx)
+result = dwz.create_single("https://www.baidu.com/3", "long-term")
 
 # 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接
 result = dwz.query("https://custom.dwz.cn/shortPath")
