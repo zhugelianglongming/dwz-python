@@ -10,7 +10,7 @@ from urllib import parse
 
 def _check_tov(tov):
     """
-    :param tov: term of validity
+    :param tov: term of validity, options:
     :return: ValueError
     """
     if tov not in ("1-year", "long-term"):
@@ -62,10 +62,13 @@ class Dwz:
         :return: json with format:
             [
                 {
-                    "Code": 0,
-                    "ShortUrl": "",
+                    "Code": -1,
                     "LongUrl": "",
                     "ErrMsg": ""
+                },
+                {
+                    "ShortUrl": "",
+                    "LongUrl": "",
                 }
             ]
         :exception: ValueError, RuntimeError
@@ -102,7 +105,6 @@ class Dwz:
         :return: short URL
         :exception: ValueError, RuntimeError
         """
-        # do request
         result = self.create([long_url], tov)[0]
         if "Code" in result and result["Code"] != 0:
             raise RuntimeError(result["ErrMsg"])
@@ -123,7 +125,7 @@ class Dwz:
         # check result
         result = json.loads(resp.text)
         if "Code" not in result:
-            raise RuntimeError("Response HTTP Status: ()".format(resp.status_code))
+            raise RuntimeError("Response HTTP Status: {}".format(resp.status_code))
         if result["Code"] != 0:
             raise RuntimeError(result["ErrMsg"])
         return result["LongUrl"]
