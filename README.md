@@ -10,10 +10,10 @@ from dwz import Dwz
 
 dwz = Dwz("token")
 
-# 为 2 条长网址链接创建 1 年有效的短网址 (dwz.cn/xxx)
+# 为多条长网址链接创建 1 年有效的短网址 (dwz.cn/xxx)
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "1-year")
-# 为 1 条长网址链接创建长期有效的短网址 (dwz.cn/xxx)
+# 为单条长网址链接创建长期有效的短网址 (dwz.cn/xxx)
 result = dwz.create_single("https://www.baidu.com/3", "long-term")
 
 # 查询 'https://dwz.cn/shortPath' 对应的长网址链接
@@ -30,10 +30,10 @@ from dwz import Dwz
 # 假设定制域名为 'custom.dwz.cn'
 dwz = Dwz("token", "custom.dwz.cn")
 
-# 为 2 条长网址链接创建 1 年有效的短网址 (custom.dwz.cn/xxx)
+# 为多条长网址链接创建 1 年有效的短网址 (custom.dwz.cn/xxx)
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "1-year")
-# 为 1 条长网址链接创建长期有效的短网址 (custom.dwz.cn/xxx)
+# 为单条长网址链接创建长期有效的短网址 (custom.dwz.cn/xxx)
 result = dwz.create_single("https://www.baidu.com/3", "long-term")
 
 # 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接

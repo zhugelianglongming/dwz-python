@@ -10,9 +10,11 @@ from dwz import Dwz
 
 dwz = Dwz("token")
 
-# create short URL (dwz.cn) for 2 long URLs with 1 year validity
+# create short URL (dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "1-year")
+# create short URL (dwz.cn) for single long URLs with long-term validity
+result = dwz.create_single("https://www.baidu.com/3", "long-term")
 
 # query origin long URL for 'https://dwz.cn/shortPath'
 result = dwz.query("https://dwz.cn/shortPath")
@@ -29,9 +31,11 @@ from dwz import Dwz
 # a custom domain as 'custom.dwz.cn'
 dwz = Dwz("token", "custom.dwz.cn")
 
-# create long-term short URL (custom.dwz.cn) for 2 long URLs
+# create short URL (custom.dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
 result = dwz.create(long_urls, "long-term")
+# create short URL (custom.dwz.cn) for single long URLs with long-term validity
+result = dwz.create_single("https://www.baidu.com/3", "long-term")
 
 # query origin long URL for 'https://custom.dwz.cn/shortPath'
 result = dwz.query("https://custom.dwz.cn/shortPath")
