@@ -10,7 +10,7 @@ from urllib import parse
 
 def _check_tov(tov):
     """
-    :param tov: term of validity, options:
+    :param tov: term of validity
     :return: ValueError
     """
     if tov not in ("1-year", "long-term"):
