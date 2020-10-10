@@ -1,20 +1,60 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 # API: https://dwz.cn/console/apidoc/v3
 
 import json
 import re
 import requests
+import socket
 from urllib import parse
 
+SCHEMES = ("http", "https")
+TERM_OF_VALIDITY = ("1-year", "long-term")
 
-def _check_tov(tov):
+
+def check_tov(tov):
     """
+    check term of validity, raise error when invalid
     :param tov: term of validity
     :return: ValueError
     """
-    if tov not in ("1-year", "long-term"):
-        raise ValueError("invalid term of validity")
+    if tov not in TERM_OF_VALIDITY:
+        raise ValueError("invalid term of validity: {}, expect {}".format(tov, TERM_OF_VALIDITY))
+
+
+def check_long_url(long_url):
+    """
+    check long URL, raise error when invalid
+    invalid include:
+    1. invalid scheme
+    2. IP host
+    :param long_url:
+    :return: ValueError
+    """
+    url = parse.urlsplit(long_url)
+
+    # check scheme
+    if url.scheme.lower() not in SCHEMES:
+        raise ValueError("invalid scheme: {}, expect {}".format(url.scheme.lower(), SCHEMES))
+
+    # check host
+    user, netloc = parse.splituser(url.netloc)
+    host, port = parse.splitport(netloc)
+    try:
+        # test for IPv4
+        socket.inet_pton(socket.AF_INET, host)
+    except socket.error:
+        try:
+            # test for IPv6
+            ipv6 = str.rstrip(str.lstrip(host, '['), ']')
+            socket.inet_pton(socket.AF_INET6, ipv6)
+        except socket.error:
+            # host isn't IP (expected)
+            pass
+        else:
+            raise ValueError("invalid host in {}, unexpected IPv6 {}".format(long_url, ipv6))
+    else:
+        raise ValueError("invalid host in {}, unexpected IPv4 {}".format(long_url, host))
 
 
 def parse_short_url(short_url):
@@ -49,7 +89,7 @@ class Dwz:
         self.header = {
             "Dwz-Token": token,
             "Content-Language": "zh"
-            }
+        }
         self.short_domain = short_domain
 
     def create(self, long_urls, tov):
@@ -78,13 +118,14 @@ class Dwz:
             raise ValueError("no long URL")
         if len(long_urls) > 200:
             raise ValueError("too many long URLs")
-        _check_tov(tov)
+        check_tov(tov)
 
         # do request
         url = parse.urlunsplit((Dwz.schema, self.short_domain, Dwz.api_path, None, None))
         data = []
         for long_url in long_urls:
-            data.append({"LongUrl":long_url,"TermOfValidity":tov})
+            check_long_url(long_url)
+            data.append({"LongUrl": long_url, "TermOfValidity": tov})
         resp = requests.post(url, headers=self.header, data=json.dumps(data))
 
         # check result
@@ -119,7 +160,7 @@ class Dwz:
         """
         # do request
         domain, short_path = parse_short_url(short_url)
-        url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path+"/"+short_path, None, None))
+        url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path + "/" + short_path, None, None))
         resp = requests.get(url, headers=self.header)
 
         # check result
@@ -138,7 +179,7 @@ class Dwz:
         """
         # do request
         domain, short_path = parse_short_url(short_url)
-        url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path+"/"+short_path, None, None))
+        url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path + "/" + short_path, None, None))
         resp = requests.delete(url, headers=self.header)
 
         # check result
