@@ -1,6 +1,8 @@
 # dwz-python
 
-This repo demonstrate how to use [API](https://dwz.cn/console/apidoc/v3) for DWZ in Python.
+[中文](README.md) | English
+
+This repo demonstrates how to use [API](https://dwz.cn/console/apidoc/v3) for DWZ in Python.
 
 * [Token](https://console.bce.baidu.com/dwz/#/dwz/token) is required.
 
@@ -11,10 +13,10 @@ from dwz import Dwz
 dwz = Dwz("token")
 
 # create short URL (dwz.cn) for multi long URLs with 1 year validity
-long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
+long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
 results = dwz.create(long_urls, "1-year")
 # create short URL (dwz.cn) for single long URLs with long-term validity
-short_url = dwz.create_single("https://www.baidu.com/3", "long-term")
+short_url = dwz.create_single("https://my.domain/very-long-suffix", "long-term")
 
 # query origin long URL for 'https://dwz.cn/shortPath'
 long_url = dwz.query("https://dwz.cn/shortPath")
@@ -28,14 +30,14 @@ BTW not free~
 ```python
 from dwz import Dwz
 
-# a custom domain as 'custom.dwz.cn'
+# a custom domain as '*.dwz.cn'
 dwz = Dwz("token", "custom.dwz.cn")
 
 # create short URL (custom.dwz.cn) for multi long URLs with 1 year validity
-long_urls = ["https://www.baidu.com/1","https://www.baidu.com/2"]
+long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
 results = dwz.create(long_urls, "long-term")
 # create short URL (custom.dwz.cn) for single long URLs with long-term validity
-short_url = dwz.create_single("https://www.baidu.com/3", "long-term")
+short_url = dwz.create_single("https://my.domain/very-long-suffix", "long-term")
 
 # query origin long URL for 'https://custom.dwz.cn/shortPath'
 long_url = dwz.query("https://custom.dwz.cn/shortPath")
