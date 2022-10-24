@@ -10,13 +10,13 @@ This repo demonstrates how to use [API](https://dwz.cn/console/apidoc/v3) for DW
 ```python
 from dwz import Dwz
 
-dwz = Dwz("token")
+dwz = Dwz("my token")
 
 # create short URL (dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, "1-year")
+results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # create short URL (dwz.cn) for single long URLs with long-term validity
-short_url = dwz.create_single("https://my.domain/very-long-suffix", "long-term")
+short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # query origin long URL for 'https://dwz.cn/shortPath'
 long_url = dwz.query("https://dwz.cn/shortPath")
@@ -31,13 +31,13 @@ BTW not free~
 from dwz import Dwz
 
 # a custom domain as '*.dwz.cn'
-dwz = Dwz("token", "custom.dwz.cn")
+dwz = Dwz("my token", "custom.dwz.cn")
 
 # create short URL (custom.dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, "long-term")
+results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # create short URL (custom.dwz.cn) for single long URLs with long-term validity
-short_url = dwz.create_single("https://my.domain/very-long-suffix", "long-term")
+short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # query origin long URL for 'https://custom.dwz.cn/shortPath'
 long_url = dwz.query("https://custom.dwz.cn/shortPath")

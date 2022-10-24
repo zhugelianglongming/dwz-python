@@ -9,7 +9,12 @@ import socket
 from urllib import parse
 
 SCHEMES = ("http", "https")
-TERM_OF_VALIDITY = ("1-year", "long-term")
+
+# term of validity
+TERM_OF_VALIDITY_1_YEAR = "1-year"
+TERM_OF_VALIDITY_LONG_TERM = "long-term"
+
+TERM_OF_VALIDITY_KEYS = (TERM_OF_VALIDITY_1_YEAR, TERM_OF_VALIDITY_LONG_TERM)
 
 
 def check_tov(tov):
@@ -18,8 +23,8 @@ def check_tov(tov):
     :param tov: term of validity
     :return: ValueError
     """
-    if tov not in TERM_OF_VALIDITY:
-        raise ValueError("invalid term of validity: {}, expect {}".format(tov, TERM_OF_VALIDITY))
+    if tov not in TERM_OF_VALIDITY_KEYS:
+        raise ValueError("invalid term of validity: {}, expect {}".format(tov, TERM_OF_VALIDITY_KEYS))
 
 
 def check_long_url(long_url):
@@ -31,22 +36,20 @@ def check_long_url(long_url):
     :param long_url:
     :return: ValueError
     """
-    url = parse.urlsplit(long_url)
+    url = parse.urlparse(long_url)
 
     # check scheme
     if url.scheme.lower() not in SCHEMES:
         raise ValueError("invalid scheme: {}, expect {}".format(url.scheme.lower(), SCHEMES))
 
     # check host
-    user, netloc = parse.splituser(url.netloc)
-    host, port = parse.splitport(netloc)
     try:
         # test for IPv4
-        socket.inet_pton(socket.AF_INET, host)
+        socket.inet_pton(socket.AF_INET, url.hostname)
     except socket.error:
         try:
             # test for IPv6
-            ipv6 = str.rstrip(str.lstrip(host, '['), ']')
+            ipv6 = str.rstrip(str.lstrip(url.hostname, '['), ']')
             socket.inet_pton(socket.AF_INET6, ipv6)
         except socket.error:
             # host isn't IP (expected)
@@ -54,7 +57,7 @@ def check_long_url(long_url):
         else:
             raise ValueError("invalid host in {}, unexpected IPv6 {}".format(long_url, ipv6))
     else:
-        raise ValueError("invalid host in {}, unexpected IPv4 {}".format(long_url, host))
+        raise ValueError("invalid host in {}, unexpected IPv4 {}".format(long_url, url.hostname))
 
 
 def parse_short_url(short_url):

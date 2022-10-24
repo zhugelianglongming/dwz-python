@@ -10,13 +10,13 @@
 ```python
 from dwz import Dwz
 
-dwz = Dwz("token")
+dwz = Dwz("my token")
 
 # 为多条长网址链接创建 1 年有效的短网址 (dwz.cn/xxx)
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, "1-year")
+results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # 为单条长网址链接创建长期有效的短网址 (dwz.cn/xxx)
-short_url = dwz.create_single("https://my.domain/very-long-suffix", "long-term")
+short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # 查询 'https://dwz.cn/shortPath' 对应的长网址链接
 long_url = dwz.query("https://dwz.cn/shortPath")
@@ -30,13 +30,13 @@ dwz.delete("https://dwz.cn/shortPath")
 from dwz import Dwz
 
 # 设置定制域名：'*.dwz.cn'
-dwz = Dwz("token", "custom.dwz.cn")
+dwz = Dwz("my token", "custom.dwz.cn")
 
 # 为多条长网址链接创建 1 年有效的短网址 (custom.dwz.cn/xxx)
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, "1-year")
+results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # 为单条长网址链接创建长期有效的短网址 (custom.dwz.cn/xxx)
-short_url = dwz.create_single("https://my.domain/very-long-suffix", "long-term")
+short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接
 long_url = dwz.query("https://custom.dwz.cn/shortPath")

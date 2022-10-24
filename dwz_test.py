@@ -7,7 +7,7 @@ import unittest
 class DwzTestCase(unittest.TestCase):
     def test_check_tov(self):
         # valid
-        for tov in ("1-year", "long-term"):
+        for tov in dwz.TERM_OF_VALIDITY_KEYS:
             self.assertIsNone(dwz.check_tov(tov), "valid term of validity")
 
         # invalid
