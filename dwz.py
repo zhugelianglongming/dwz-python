@@ -8,24 +8,28 @@ import socket
 from urllib import parse
 
 import requests
+from enum import Enum
 
 SCHEMES = ("http", "https")
 
-# term of validity
-TERM_OF_VALIDITY_1_YEAR = "1-year"
-TERM_OF_VALIDITY_LONG_TERM = "long-term"
 
-TERM_OF_VALIDITY_KEYS = (TERM_OF_VALIDITY_1_YEAR, TERM_OF_VALIDITY_LONG_TERM)
-
-
-def check_tov(tov):
+class TOV(Enum):
     """
-    check term of validity, raise error when invalid
-    :param tov: term of validity
-    :return: ValueError
+    term of validity
     """
-    if tov not in TERM_OF_VALIDITY_KEYS:
-        raise ValueError("invalid term of validity: {}, expect {}".format(tov, TERM_OF_VALIDITY_KEYS))
+    ONE_YEAR = "1-year"
+    LONG_TERM = "long-term"
+
+    @classmethod
+    def check(cls, tov):
+        """
+        check term of validity, raise error when invalid
+        :param tov: term of validity
+        :return: ValueError
+        """
+        values = (cls.ONE_YEAR, cls.LONG_TERM)
+        if tov not in values:
+            raise ValueError("invalid term of validity: {}, expect {}".format(tov, values))
 
 
 def check_long_url(long_url):
@@ -98,7 +102,7 @@ class Dwz:
     schema = "https"
     api_path = "/api/v3/short-urls"
 
-    def __init__(self, token: str, short_domain: str="dwz.cn"):
+    def __init__(self, token: str, short_domain: str = "dwz.cn"):
         """
         :param token:access token, see https://console.bce.baidu.com/dwz/#/dwz/token
         :param short_domain: domain of DWZ short URL
@@ -111,7 +115,7 @@ class Dwz:
         }
         self.short_domain = short_domain
 
-    def create(self, long_urls, tov):
+    def create(self, long_urls, tov: TOV):
         """
         create short URL by list of long URLs with same term of validity
         :param long_urls: long URL list
@@ -137,21 +141,21 @@ class Dwz:
             raise ValueError("no long URL")
         if len(long_urls) > 200:
             raise ValueError("too many long URLs")
-        check_tov(tov)
+        TOV.check(tov)
 
         # do request
         url = parse.urlunsplit((Dwz.schema, self.short_domain, Dwz.api_path, None, None))
         data = []
         for long_url in long_urls:
             check_long_url(long_url)
-            data.append({"LongUrl": long_url, "TermOfValidity": tov})
+            data.append({"LongUrl": long_url, "TermOfValidity": tov.value})
         resp = requests.post(url, headers=self.header, data=json.dumps(data))
 
         # check result
         result = parse_result(resp)
         return result["ShortUrls"]
 
-    def create_single(self, long_url: str, tov):
+    def create_single(self, long_url: str, tov: TOV):
         """
         create short URL for single long URL
         :param long_url:

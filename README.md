@@ -14,9 +14,9 @@ client = dwz.Dwz("my token")
 
 # 为多条长网址链接创建 1 年有效的短网址 (dwz.cn/xxx)
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TOV.ONE_YEAR)
 # 为单条长网址链接创建长期有效的短网址 (dwz.cn/xxx)
-short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TOV.LONG_TERM)
 
 # 查询 'https://dwz.cn/shortPath' 对应的长网址链接
 long_url = client.query("https://dwz.cn/shortPath")
@@ -37,9 +37,9 @@ client = dwz.Dwz("my token", "custom.dwz.cn")
 
 # 为多条长网址链接创建 1 年有效的短网址 (custom.dwz.cn/xxx)
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TOV.ONE_YEAR)
 # 为单条长网址链接创建长期有效的短网址 (custom.dwz.cn/xxx)
-short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TOV.LONG_TERM)
 
 # 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接
 long_url = client.query("https://custom.dwz.cn/shortPath")

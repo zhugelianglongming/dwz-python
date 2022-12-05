@@ -14,9 +14,9 @@ client = dwz.Dwz("my token")
 
 # create short URL (dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TOV.ONE_YEAR)
 # create short URL (dwz.cn) for single long URLs with long-term validity
-short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TOV.LONG_TERM)
 
 # query origin long URL for 'https://dwz.cn/shortPath'
 long_url = client.query("https://dwz.cn/shortPath")
@@ -38,9 +38,9 @@ client = dwz.Dwz("my token", "custom.dwz.cn")
 
 # create short URL (custom.dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TOV.ONE_YEAR)
 # create short URL (custom.dwz.cn) for single long URLs with long-term validity
-short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TOV.LONG_TERM)
 
 # query origin long URL for 'https://custom.dwz.cn/shortPath'
 long_url = client.query("https://custom.dwz.cn/shortPath")
