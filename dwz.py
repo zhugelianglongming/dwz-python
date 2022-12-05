@@ -4,9 +4,10 @@
 
 import json
 import re
-import requests
 import socket
 from urllib import parse
+
+import requests
 
 SCHEMES = ("http", "https")
 
@@ -60,7 +61,7 @@ def check_long_url(long_url):
         raise ValueError("invalid host in {}, unexpected IPv4 {}".format(long_url, url.hostname))
 
 
-def parse_short_url(short_url):
+def parse_short_url(short_url: str):
     """
     parse domain and path for short URL
     :param short_url:
@@ -75,6 +76,21 @@ def parse_short_url(short_url):
     return result.netloc, result.path.lstrip("/")
 
 
+def parse_result(resp):
+    """
+    simple check for result code in HTTP response
+    :param resp: HTTP response
+    :return: response body
+    :exception: ValueError, RuntimeError
+    """
+    result = json.loads(resp.text)
+    if "Code" not in result:
+        raise RuntimeError("Response HTTP Status: ()".format(resp.status_code))
+    if result["Code"] != 0:
+        raise RuntimeError(result["ErrMsg"])
+    return result
+
+
 class Dwz:
     """
     python code use DWZ API
@@ -82,7 +98,7 @@ class Dwz:
     schema = "https"
     api_path = "/api/v3/short-urls"
 
-    def __init__(self, token, short_domain="dwz.cn"):
+    def __init__(self, token: str, short_domain: str="dwz.cn"):
         """
         :param token:access token, see https://console.bce.baidu.com/dwz/#/dwz/token
         :param short_domain: domain of DWZ short URL
@@ -132,14 +148,10 @@ class Dwz:
         resp = requests.post(url, headers=self.header, data=json.dumps(data))
 
         # check result
-        result = json.loads(resp.text)
-        if "Code" not in result:
-            raise RuntimeError("Response HTTP Status: ()".format(resp.status_code))
-        if result["Code"] != 0:
-            raise RuntimeError(result["ErrMsg"])
+        result = parse_result(resp)
         return result["ShortUrls"]
 
-    def create_single(self, long_url, tov):
+    def create_single(self, long_url: str, tov):
         """
         create short URL for single long URL
         :param long_url:
@@ -154,7 +166,7 @@ class Dwz:
             raise RuntimeError(result["ErrMsg"])
         return result["ShortUrl"]
 
-    def query(self, short_url):
+    def query(self, short_url: str):
         """
         query origin long URL for short URL
         :param short_url:
@@ -167,14 +179,24 @@ class Dwz:
         resp = requests.get(url, headers=self.header)
 
         # check result
-        result = json.loads(resp.text)
-        if "Code" not in result:
-            raise RuntimeError("Response HTTP Status: {}".format(resp.status_code))
-        if result["Code"] != 0:
-            raise RuntimeError(result["ErrMsg"])
+        result = parse_result(resp)
         return result["LongUrl"]
 
-    def delete(self, short_url):
+    def update(self, short_url: str, long_url: str):
+        """
+        update short URL
+        :param short_url: short URL to be updated
+        :param long_url: new target long URL
+        :exception: ValueError, RuntimeError
+        """
+        # do request
+        domain, short_path = parse_short_url(short_url)
+        url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path + "/" + short_path, None, None))
+        data = {"LongUrl": long_url}
+        resp = requests.patch(url, headers=self.header, data=json.dumps(data))
+        parse_result(resp)
+
+    def delete(self, short_url: str):
         """
         delete short URL
         :param short_url:
@@ -184,10 +206,4 @@ class Dwz:
         domain, short_path = parse_short_url(short_url)
         url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path + "/" + short_path, None, None))
         resp = requests.delete(url, headers=self.header)
-
-        # check result
-        result = json.loads(resp.text)
-        if "Code" not in result:
-            raise RuntimeError("Response HTTP Status: ()".format(resp.status_code))
-        if result["Code"] != 0:
-            raise RuntimeError(result["ErrMsg"])
+        parse_result(resp)

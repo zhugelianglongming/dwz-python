@@ -8,40 +8,46 @@ This repo demonstrates how to use [API](https://dwz.cn/console/apidoc/v3) for DW
 
 ## Normal user
 ```python
-from dwz import Dwz
+import dwz
 
-dwz = Dwz("my token")
+client = dwz.Dwz("my token")
 
 # create short URL (dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # create short URL (dwz.cn) for single long URLs with long-term validity
-short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # query origin long URL for 'https://dwz.cn/shortPath'
-long_url = dwz.query("https://dwz.cn/shortPath")
+long_url = client.query("https://dwz.cn/shortPath")
+
+# update short URL 'https://dwz.cn/shortPath' with target long URL as 'https://my.domain/new-long-url'
+client.update("https://dwz.cn/shortPath", "https://my.domain/new-long-url")
 
 # delete 'https://dwz.cn/shortPath'
-dwz.delete("https://dwz.cn/shortPath")
+client.delete("https://dwz.cn/shortPath")
 ```
 ## Custom domain user
 You can apply a custom domain by submitting a [ticket](https://ticket.bce.baidu.com/#/ticket/create~productId=188&questionId=706&channel=2),
 BTW not free~
 ```python
-from dwz import Dwz
+import dwz
 
 # a custom domain as '*.dwz.cn'
-dwz = Dwz("my token", "custom.dwz.cn")
+client = dwz.Dwz("my token", "custom.dwz.cn")
 
 # create short URL (custom.dwz.cn) for multi long URLs with 1 year validity
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # create short URL (custom.dwz.cn) for single long URLs with long-term validity
-short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # query origin long URL for 'https://custom.dwz.cn/shortPath'
-long_url = dwz.query("https://custom.dwz.cn/shortPath")
+long_url = client.query("https://custom.dwz.cn/shortPath")
+
+# update short URL 'https://custom.dwz.cn/shortPath' with target long URL as 'https://my.domain/new-long-url'
+client.update("https://custom.dwz.cn/shortPath", "https://my.domain/new-long-url")
 
 # delete 'https://custom.dwz.cn/shortPath'
-dwz.delete("https://custom.dwz.cn/shortPath")
+client.delete("https://custom.dwz.cn/shortPath")
 ```

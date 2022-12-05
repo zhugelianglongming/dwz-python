@@ -8,39 +8,45 @@
 
 ## 常规用法
 ```python
-from dwz import Dwz
+import dwz
 
-dwz = Dwz("my token")
+client = dwz.Dwz("my token")
 
 # 为多条长网址链接创建 1 年有效的短网址 (dwz.cn/xxx)
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # 为单条长网址链接创建长期有效的短网址 (dwz.cn/xxx)
-short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # 查询 'https://dwz.cn/shortPath' 对应的长网址链接
-long_url = dwz.query("https://dwz.cn/shortPath")
+long_url = client.query("https://dwz.cn/shortPath")
+
+# 更新短网址：'https://dwz.cn/shortPath' 的目标长网址为 'https://my.domain/new-long-url'
+client.update("https://dwz.cn/shortPath", "https://my.domain/new-long-url")
 
 # 删除短网址：'https://dwz.cn/shortPath'
-dwz.delete("https://dwz.cn/shortPath")
+client.delete("https://dwz.cn/shortPath")
 ```
 ## 定制域名用法
 定制域名目前可通过 [工单](https://ticket.bce.baidu.com/#/ticket/create~productId=188&questionId=706&channel=2) 申请购买
 ```python
-from dwz import Dwz
+import dwz
 
 # 设置定制域名：'*.dwz.cn'
-dwz = Dwz("my token", "custom.dwz.cn")
+client = dwz.Dwz("my token", "custom.dwz.cn")
 
 # 为多条长网址链接创建 1 年有效的短网址 (custom.dwz.cn/xxx)
 long_urls = ["https://my.domain/very-long-path", "https://my.domain/?very-long=query"]
-results = dwz.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
+results = client.create(long_urls, dwz.TERM_OF_VALIDITY_1_YEAR)
 # 为单条长网址链接创建长期有效的短网址 (custom.dwz.cn/xxx)
-short_url = dwz.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
+short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TERM_OF_VALIDITY_LONG_TERM)
 
 # 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接
-long_url = dwz.query("https://custom.dwz.cn/shortPath")
+long_url = client.query("https://custom.dwz.cn/shortPath")
+
+# 更新短网址：'https://custom.dwz.cn/shortPath' 的目标长网址为 'https://my.domain/new-long-url'
+client.update("https://custom.dwz.cn/shortPath", "https://my.domain/new-long-url")
 
 # 删除短网址 'https://custom.dwz.cn/shortPath'
-dwz.delete("https://custom.dwz.cn/shortPath")
+client.delete("https://custom.dwz.cn/shortPath")
 ```
