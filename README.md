@@ -20,12 +20,15 @@ short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TOV.L
 
 # 查询 'https://dwz.cn/shortPath' 对应的长网址链接
 long_url = client.query("https://dwz.cn/shortPath")
+long_url = client.query("shortPath")
 
 # 更新短网址：'https://dwz.cn/shortPath' 的目标长网址为 'https://my.domain/new-long-url'
 client.update("https://dwz.cn/shortPath", "https://my.domain/new-long-url")
+client.update("shortPath", "https://my.domain/new-long-url")
 
 # 删除短网址：'https://dwz.cn/shortPath'
 client.delete("https://dwz.cn/shortPath")
+client.delete("shortPath")
 ```
 ## 定制域名用法
 定制域名目前可通过 [工单](https://ticket.bce.baidu.com/#/ticket/create~productId=188&questionId=706&channel=2) 申请购买
@@ -43,10 +46,13 @@ short_url = client.create_single("https://my.domain/very-long-suffix", dwz.TOV.L
 
 # 查询 'https://custom.dwz.cn/shortPath' 对应的长网址链接
 long_url = client.query("https://custom.dwz.cn/shortPath")
+long_url = client.query("shortPath")
 
 # 更新短网址：'https://custom.dwz.cn/shortPath' 的目标长网址为 'https://my.domain/new-long-url'
 client.update("https://custom.dwz.cn/shortPath", "https://my.domain/new-long-url")
+client.update("shortPath", "https://my.domain/new-long-url")
 
 # 删除短网址 'https://custom.dwz.cn/shortPath'
 client.delete("https://custom.dwz.cn/shortPath")
+client.delete("shortPath")
 ```

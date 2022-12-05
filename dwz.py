@@ -11,6 +11,7 @@ import requests
 from enum import Enum
 
 SCHEMES = ("http", "https")
+LONG_URL_LENGTH_MAX = 200
 
 
 class TOV(Enum):
@@ -139,7 +140,7 @@ class Dwz:
         # check params
         if len(long_urls) <= 0:
             raise ValueError("no long URL")
-        if len(long_urls) > 200:
+        if len(long_urls) > LONG_URL_LENGTH_MAX:
             raise ValueError("too many long URLs")
         TOV.check(tov)
 
@@ -170,15 +171,15 @@ class Dwz:
             raise RuntimeError(result["ErrMsg"])
         return result["ShortUrl"]
 
-    def query(self, short_url: str):
+    def query(self, short: str):
         """
-        query origin long URL for short URL
-        :param short_url:
-        :return: long URL
+        query target long URL for short URL
+        :param short: short URL or its path (with default domain)
+        :return: target long URL
         :exception: ValueError, RuntimeError
         """
         # do request
-        domain, short_path = parse_short_url(short_url)
+        domain, short_path = self.parse_short(short)
         url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path + "/" + short_path, None, None))
         resp = requests.get(url, headers=self.header)
 
@@ -186,28 +187,46 @@ class Dwz:
         result = parse_result(resp)
         return result["LongUrl"]
 
-    def update(self, short_url: str, long_url: str):
+    def update(self, short: str, long_url: str):
         """
-        update short URL
-        :param short_url: short URL to be updated
+        update short URL's target
+        :param short: short URL or its path (with default domain)
         :param long_url: new target long URL
         :exception: ValueError, RuntimeError
         """
         # do request
-        domain, short_path = parse_short_url(short_url)
+        domain, short_path = self.parse_short(short)
         url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path + "/" + short_path, None, None))
         data = {"LongUrl": long_url}
         resp = requests.patch(url, headers=self.header, data=json.dumps(data))
         parse_result(resp)
 
-    def delete(self, short_url: str):
+    def delete(self, short: str):
         """
         delete short URL
-        :param short_url:
+        :param short: short URL or its path (with default domain)
         :exception: ValueError, RuntimeError
         """
         # do request
-        domain, short_path = parse_short_url(short_url)
+        domain, short_path = self.parse_short(short)
         url = parse.urlunsplit((Dwz.schema, domain, Dwz.api_path + "/" + short_path, None, None))
         resp = requests.delete(url, headers=self.header)
         parse_result(resp)
+
+    def parse_short(self, short: str):
+        """
+        parse short info which could be one of below:
+        1. full short URL
+        2. path of short URL
+        :param short: short info
+        :return: (short domain, short path)
+        :exception: ValueError
+        """
+        if '/' in short:
+            # short URL
+            return parse_short_url(short)
+        else:
+            # short path
+            if not self.short_domain:
+                raise ValueError("domain for short URL is required")
+            return self.short_domain, short

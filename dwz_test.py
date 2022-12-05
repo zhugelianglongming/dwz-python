@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-import dwz
 import unittest
+
+import dwz
 from dwz import TOV
 
 
